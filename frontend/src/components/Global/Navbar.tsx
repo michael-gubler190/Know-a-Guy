@@ -4,19 +4,43 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Container } from '@mui/material';
+import { NavLink, useNavigate } from 'react-router';
 
-export default function Navbar() {
+interface NavbarProps {
+  position: "fixed" | "absolute" | "sticky" | "relative" | "static" | undefined
+}
+
+export default function Navbar({position} : NavbarProps) {
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar color='primary' position="fixed">
+      <AppBar color='primary' position={position}>
         <Container maxWidth="xl">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography 
+              variant="h6" 
+              component={NavLink} 
+              to={"/"}
+              sx={{ 
+                textDecoration: 'none', 
+                color: 'inherit' 
+              }}
+            >
               Know-a-Guy
             </Typography>
 
-            <Button color="inherit">Login</Button>
-            <Button color="inherit">Sign up</Button>
+            <Box sx={{ ml: 'auto' }}>
+              <Button 
+                color="inherit"
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </Button>
+              
+              <Button color="inherit">Sign up</Button>
+            </Box>
+
           </Toolbar>
         </Container>
       </AppBar>

@@ -1,10 +1,9 @@
-import { Box, CssBaseline, ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import './App.css';
-import Navbar from "./components/Global/Navbar.tsx";
 import theme from './themes/theme.ts';
-import Carousel from './components/Landing/Carousel.tsx';
-import Hero from './components/Landing/Hero.tsx';
-import WhyCustomersLove from './components/Landing/WhyCustomersLove.tsx';
+import { Route, Routes } from 'react-router';
+import LandingScreen from './screens/no-auth/LandingScreen.tsx';
+import LoginScreen from './screens/no-auth/LoginScreen.tsx';
 
 function App() {
 
@@ -12,16 +11,10 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       
-      <Box>
-        <Navbar />
-        
-        <Box sx={{ position: "relative" }}>
-          <Carousel />
-          <Hero />
-        </Box>
-
-        <WhyCustomersLove />
-      </Box>
+      <Routes>
+        <Route index element={<LandingScreen />}/>
+        <Route path='/login' element={<LoginScreen />}/>
+      </Routes>
     </ThemeProvider>
   )
 }
