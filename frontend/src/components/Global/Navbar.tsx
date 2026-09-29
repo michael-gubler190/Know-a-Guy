@@ -37,8 +37,13 @@ export default function Navbar({position} : NavbarProps) {
               >
                 Login
               </Button>
-              
-              <Button color="inherit">Sign up</Button>
+
+              <Button 
+                color="inherit"
+                onClick={() => navigate("/signup")}
+              >
+                Signup
+              </Button>
             </Box>
 
           </Toolbar>

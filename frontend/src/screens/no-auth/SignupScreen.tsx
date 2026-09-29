@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import Navbar from '../../components/Global/Navbar';
-import LoginForm from '../../components/Auth/LoginForm';
+import SignupForm from '../../components/Auth/SignupForm';
 
-function LoginScreen() {
+function SignupScreen() {
 
   return (
     <Box
@@ -16,6 +16,9 @@ function LoginScreen() {
       <Navbar position='fixed' />
 
       {/* Left Side: Large Image (Takes up half screen width on desktop) */}
+      <SignupForm />
+
+      {/* Right Side: Login Form & Tagline */}
       <Box
         component="img"
         sx={{
@@ -27,11 +30,8 @@ function LoginScreen() {
         alt="Login visual"
       />
 
-      {/* Right Side: Login Form & Tagline */}
-      <LoginForm />
-      
     </Box>
   );
 }
 
-export default LoginScreen;
+export default SignupScreen;
