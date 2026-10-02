@@ -9,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
+import gubler.know_a_guy.know_a_guy.enums.users.UserRole;
+import gubler.know_a_guy.know_a_guy.enums.users.UserStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,14 +24,6 @@ import lombok.Data;
 @Table(name = "users")
 @Data
 public class UserEntity {
-
-    private enum UserRole {
-        client, professional, admin
-    }
-
-    private enum UserStatus {
-        active, paused, inactive
-    }
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.VERSION_7)
