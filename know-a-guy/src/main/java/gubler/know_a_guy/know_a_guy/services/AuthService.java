@@ -3,6 +3,7 @@ package gubler.know_a_guy.know_a_guy.services;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import gubler.know_a_guy.know_a_guy.DTOs.auth.AuthResult;
 import gubler.know_a_guy.know_a_guy.DTOs.auth.ClientSignupRequest;
 import gubler.know_a_guy.know_a_guy.entities.UserEntity;
 import gubler.know_a_guy.know_a_guy.enums.users.UserRole;
@@ -11,6 +12,7 @@ import gubler.know_a_guy.know_a_guy.exceptions.ConflictException;
 import gubler.know_a_guy.know_a_guy.exceptions.ValidationException;
 import gubler.know_a_guy.know_a_guy.mappers.UserMapper;
 import gubler.know_a_guy.know_a_guy.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,9 +21,11 @@ public class AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     // Client account creation
-    public void clientAccountCreation(ClientSignupRequest clientSignupRequest) {
+    @Transactional
+    public AuthResult clientAccountCreation(ClientSignupRequest clientSignupRequest) {
         // Check if user with email or username already exist
         Boolean existsByEmail = userRepository.existsByEmail(clientSignupRequest.getEmail());
         Boolean existsByUsername = userRepository.existsByUsername(clientSignupRequest.getUsername());
@@ -48,6 +52,15 @@ public class AuthService {
         newUser.setRole(UserRole.client);
         newUser.setStatus(UserStatus.active);
 
-        userRepository.save(newUser);
+        UserEntity saved = userRepository.save(newUser);
+
+
+        // Return auth result to controller
+        AuthResult result = new AuthResult(
+            jwtService.generateAccessToken(saved),
+            jwtService.generateRefreshToken(saved),
+            userMapper.toResponse(saved));
+
+        return result;
     }
 }

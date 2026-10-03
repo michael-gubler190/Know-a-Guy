@@ -1,12 +1,17 @@
 package gubler.know_a_guy.know_a_guy.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import gubler.know_a_guy.know_a_guy.DTOs.auth.AuthResult;
 import gubler.know_a_guy.know_a_guy.DTOs.auth.ClientSignupRequest;
+import gubler.know_a_guy.know_a_guy.services.AuthCookieService;
 import gubler.know_a_guy.know_a_guy.services.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -15,10 +20,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final AuthCookieService cookieService;
 
     // Client account creation endpoint
     @PostMapping("/client/signup")
-    public void clientCreateAccount(@Valid @RequestBody ClientSignupRequest clientSignupRequest) {
-        authService.clientAccountCreation(clientSignupRequest);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void clientCreateAccount(@Valid @RequestBody ClientSignupRequest clientSignupRequest, HttpServletResponse response) {
+        AuthResult result = authService.clientAccountCreation(clientSignupRequest);
+        cookieService.addAuthCookies(response, result);
     }
 }
