@@ -1,11 +1,33 @@
 import { Box, Button, TextField, Typography, Link as MuiLink } from '@mui/material'
 import { useNavigate } from 'react-router';
+import { useSignup } from '../../hooks/auth/useSignup';
+import React, { useState } from 'react';
+import type { ClientSignupRequest } from '../../models/auth/ClientSignupRequest';
 
 function SignupForm() {
     const navigate = useNavigate();
+    const {mutate: signup, isPending, isError, error} = useSignup();
+    const [signupInfo, setSignupInfo] = useState<ClientSignupRequest>({
+      firstName: "",
+      lastName: "",
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: ""
+    });
 
-    const handleSubmit = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSignupInfo((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value
+      }));
+    }
+
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        signup(signupInfo, {
+          onSuccess: () => console.log("Successfully created account")
+        });
     };
 
   return (
@@ -32,11 +54,38 @@ function SignupForm() {
 
           <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
             <TextField
+              label="First Name"
+              type="text"
+              variant="outlined"
+              fullWidth
+              required
+              value={signupInfo.firstName}
+              name='firstName'
+              onChange={handleChange}
+              disabled={isPending}
+            />
+
+            <TextField
+              label="Last Name"
+              type="text"
+              variant="outlined"
+              fullWidth
+              value={signupInfo.lastName}
+              name='lastName'
+              onChange={handleChange}
+              disabled={isPending}
+            />
+            
+            <TextField
               label="Email Address"
               type="email"
               variant="outlined"
               fullWidth
               required
+              value={signupInfo.email}
+              name='email'
+              onChange={handleChange}
+              disabled={isPending}
             />
 
             <TextField
@@ -44,7 +93,10 @@ function SignupForm() {
               type="text"
               variant="outlined"
               fullWidth
-              required
+              value={signupInfo.username}
+              name='username'
+              onChange={handleChange}
+              disabled={isPending}
             />
 
             <TextField
@@ -53,6 +105,10 @@ function SignupForm() {
               variant="outlined"
               fullWidth
               required
+              value={signupInfo.password}
+              name='password'
+              onChange={handleChange}
+              disabled={isPending}
             />
 
             <TextField
@@ -61,6 +117,10 @@ function SignupForm() {
               variant="outlined"
               fullWidth
               required
+              value={signupInfo.confirmPassword}
+              name='confirmPassword'
+              onChange={handleChange}
+              disabled={isPending}
             />
             
             <Button
@@ -69,10 +129,17 @@ function SignupForm() {
               size="large"
               fullWidth
               sx={{ mt: 1, py: 1.5 }}
+              disabled={isPending}
             >
-              Signup
+              {isPending ? "Creating account..." : "Signup"}
             </Button>
           </Box>
+
+          {isError && (
+            <p role='alert'>
+              {error.message ?? "Something went wrong. Please try again."}
+            </p>
+          )}
 
           {/* Sign up prompt */}
           <Box sx={{ mt: 3, textAlign: 'center' }}>
