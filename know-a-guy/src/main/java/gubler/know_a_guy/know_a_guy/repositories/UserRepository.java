@@ -12,4 +12,6 @@ import gubler.know_a_guy.know_a_guy.entities.UserEntity;
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByEmail(String email);
     Optional<UserEntity> findByUsername(String username);
+    Boolean existsByEmail(String email);
+    Boolean existsByUsername(String username);
 }
