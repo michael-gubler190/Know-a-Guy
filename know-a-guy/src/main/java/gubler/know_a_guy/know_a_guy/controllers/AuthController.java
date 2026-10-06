@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import gubler.know_a_guy.know_a_guy.DTOs.auth.AuthResult;
 import gubler.know_a_guy.know_a_guy.DTOs.auth.ClientSignupRequest;
+import gubler.know_a_guy.know_a_guy.DTOs.auth.LoginRequest;
 import gubler.know_a_guy.know_a_guy.services.AuthCookieService;
 import gubler.know_a_guy.know_a_guy.services.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,6 +28,14 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public void clientCreateAccount(@Valid @RequestBody ClientSignupRequest clientSignupRequest, HttpServletResponse response) {
         AuthResult result = authService.clientAccountCreation(clientSignupRequest);
+        cookieService.addAuthCookies(response, result);
+    }
+
+    // Login endpoint
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public void login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        AuthResult result = authService.login(loginRequest);
         cookieService.addAuthCookies(response, result);
     }
 }

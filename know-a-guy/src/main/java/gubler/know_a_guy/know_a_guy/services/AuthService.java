@@ -5,10 +5,14 @@ import org.springframework.stereotype.Service;
 
 import gubler.know_a_guy.know_a_guy.DTOs.auth.AuthResult;
 import gubler.know_a_guy.know_a_guy.DTOs.auth.ClientSignupRequest;
+import gubler.know_a_guy.know_a_guy.DTOs.auth.LoginRequest;
+import gubler.know_a_guy.know_a_guy.DTOs.user.UserResponseDto;
 import gubler.know_a_guy.know_a_guy.entities.UserEntity;
 import gubler.know_a_guy.know_a_guy.enums.users.UserRole;
 import gubler.know_a_guy.know_a_guy.enums.users.UserStatus;
 import gubler.know_a_guy.know_a_guy.exceptions.ConflictException;
+import gubler.know_a_guy.know_a_guy.exceptions.ForbiddenException;
+import gubler.know_a_guy.know_a_guy.exceptions.ResourceNotFoundException;
 import gubler.know_a_guy.know_a_guy.exceptions.ValidationException;
 import gubler.know_a_guy.know_a_guy.mappers.UserMapper;
 import gubler.know_a_guy.know_a_guy.repositories.UserRepository;
@@ -22,6 +26,24 @@ public class AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+
+    // Log user in
+    public AuthResult login(LoginRequest loginRequest) {
+        UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
+            .orElseThrow(() -> new ResourceNotFoundException("User with that email not found"));
+        
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPasswordHash())) {
+            throw new ForbiddenException("Incorrect email or password");
+        }
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        UserResponseDto userResponse = userMapper.toResponse(user);
+
+        AuthResult result = new AuthResult(accessToken, refreshToken, userResponse);
+        return result;
+    }
+
 
     // Client account creation
     @Transactional
