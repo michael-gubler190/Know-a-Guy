@@ -1,12 +1,32 @@
 import { Box, Button, TextField, Typography, Link as MuiLink } from '@mui/material'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import type { LoginRequest } from '../../models/auth/LoginRequest';
+import { useLogin } from '../../hooks/auth/useLogin';
 
 function LoginForm() {
     const navigate = useNavigate();
+    const {mutate: login, isPending, isError, error} = useLogin();
+    const [loginInfo, setLoginInfo] = useState<LoginRequest>({
+      email: "",
+      password: ""
+    });
 
-    const handleSubmit = (e: any) => {
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setLoginInfo({
+        ...loginInfo,
+        [e.target.name]: e.target.value
+      });
+    }
+
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        login(loginInfo, {
+          onSuccess: () => console.log("Successfully logged in")
+        });
     };
+
 
   return (
     <Box
@@ -37,6 +57,10 @@ function LoginForm() {
               variant="outlined"
               fullWidth
               required
+              value={loginInfo.email}
+              name='email'
+              onChange={handleChange}
+              disabled={isPending}
             />
 
             <TextField
@@ -45,6 +69,10 @@ function LoginForm() {
               variant="outlined"
               fullWidth
               required
+              value={loginInfo.password}
+              name='password'
+              onChange={handleChange}
+              disabled={isPending}
             />
             
             <Button
@@ -53,10 +81,17 @@ function LoginForm() {
               size="large"
               fullWidth
               sx={{ mt: 1, py: 1.5 }}
+              disabled={isPending}
             >
-              Login
+              {isPending ? "Logging you in..." : "Login"}
             </Button>
           </Box>
+
+          {isError && (
+            <p role='alert'>
+              {error.message ?? "Something went wrong. Please try again."}
+            </p>
+          )}
 
           {/* Sign up prompt */}
           <Box sx={{ mt: 3, textAlign: 'center' }}>
