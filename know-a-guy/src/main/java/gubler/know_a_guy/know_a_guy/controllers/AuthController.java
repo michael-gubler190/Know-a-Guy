@@ -38,4 +38,11 @@ public class AuthController {
         AuthResult result = authService.login(loginRequest);
         cookieService.addAuthCookies(response, result);
     }
+
+    // Logout endpoint
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout(HttpServletResponse response) {
+        cookieService.clear(response);
+    }
 }
