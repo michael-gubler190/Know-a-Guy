@@ -1,13 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
-
-interface UserRep {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    email: string
-    role: string
-}
+import type { UserRep } from "../../../models/users/UserRep"
 
 export interface AuthState {
     isAuthenticated: boolean

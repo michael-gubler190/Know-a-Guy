@@ -3,15 +3,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import type { LoginRequest } from '../../models/auth/LoginRequest';
 import { useLogin } from '../../hooks/auth/useLogin';
+import { useAppDispatch } from '../../redux/hooks';
+import { setUser } from "../../redux/features/auth/authSlice";
 
 function LoginForm() {
     const navigate = useNavigate();
+
     const {mutate: login, isPending, isError, error} = useLogin();
     const [loginInfo, setLoginInfo] = useState<LoginRequest>({
       email: "",
       password: ""
     });
 
+    const dispatch = useAppDispatch();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setLoginInfo({
@@ -23,7 +27,9 @@ function LoginForm() {
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         login(loginInfo, {
-          onSuccess: () => console.log("Successfully logged in")
+          onSuccess: (data) => {
+            dispatch(setUser(data!));
+          }
         });
     };
 

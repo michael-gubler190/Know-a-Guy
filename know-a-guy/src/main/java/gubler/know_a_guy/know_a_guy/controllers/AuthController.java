@@ -1,15 +1,18 @@
 package gubler.know_a_guy.know_a_guy.controllers;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import gubler.know_a_guy.know_a_guy.DTOs.api.ApiResponse;
 import gubler.know_a_guy.know_a_guy.DTOs.auth.AuthResult;
 import gubler.know_a_guy.know_a_guy.DTOs.auth.ClientSignupRequest;
 import gubler.know_a_guy.know_a_guy.DTOs.auth.LoginRequest;
+import gubler.know_a_guy.know_a_guy.DTOs.user.UserResponseDto;
 import gubler.know_a_guy.know_a_guy.services.AuthCookieService;
 import gubler.know_a_guy.know_a_guy.services.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,17 +29,25 @@ public class AuthController {
     // Client account creation endpoint
     @PostMapping("/client/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void clientCreateAccount(@Valid @RequestBody ClientSignupRequest clientSignupRequest, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<UserResponseDto>> clientCreateAccount(@Valid @RequestBody ClientSignupRequest clientSignupRequest, HttpServletResponse response) {
         AuthResult result = authService.clientAccountCreation(clientSignupRequest);
         cookieService.addAuthCookies(response, result);
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(ApiResponse.success("User successfully created", result.getUserResponse()));
     }
 
     // Login endpoint
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public void login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<UserResponseDto>> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         AuthResult result = authService.login(loginRequest);
         cookieService.addAuthCookies(response, result);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(ApiResponse.success("User successfully logged in", result.getUserResponse()));
     }
 
     // Logout endpoint

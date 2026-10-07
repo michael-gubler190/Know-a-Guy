@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Container } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router';
+import { useAppSelector } from '../../redux/hooks';
 
 interface NavbarProps {
   position: "fixed" | "absolute" | "sticky" | "relative" | "static" | undefined
@@ -12,6 +13,9 @@ interface NavbarProps {
 
 export default function Navbar({position} : NavbarProps) {
   const navigate = useNavigate();
+
+  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+  const currentUser = useAppSelector(state => state.auth.user);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -30,21 +34,36 @@ export default function Navbar({position} : NavbarProps) {
               Know-a-Guy
             </Typography>
 
-            <Box sx={{ ml: 'auto' }}>
-              <Button 
-                color="inherit"
-                onClick={() => navigate("/login")}
-              >
-                Login
-              </Button>
+            {isAuthenticated ? (
+              <Box sx={{ ml: 'auto' }}>
+                <Typography>
+                  Hello, {currentUser?.firstName}
+                </Typography>
 
-              <Button 
-                color="inherit"
-                onClick={() => navigate("/signup")}
-              >
-                Signup
-              </Button>
-            </Box>
+                <Button 
+                  color="inherit"
+                  onClick={() => navigate("/signup")}
+                >
+                  Logout
+                </Button>
+              </Box>
+            ) : (
+              <Box sx={{ ml: 'auto' }}>
+                <Button 
+                  color="inherit"
+                  onClick={() => navigate("/login")}
+                >
+                  Login
+                </Button>
+
+                <Button 
+                  color="inherit"
+                  onClick={() => navigate("/signup")}
+                >
+                  Signup
+                </Button>
+              </Box>
+            )}
 
           </Toolbar>
         </Container>
