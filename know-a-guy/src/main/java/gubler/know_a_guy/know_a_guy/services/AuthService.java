@@ -27,6 +27,17 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    // Get logged in user info
+    public UserResponseDto getMe(String email) {
+        if (email == null) throw new ForbiddenException("User email is null");
+        UserEntity currentUser = userRepository.findByEmail(email)
+            .orElseThrow(() -> new ResourceNotFoundException("User with that email is not found"));
+        
+        UserResponseDto userResponse = userMapper.toResponse(currentUser);
+        return userResponse;
+    }
+
+
     // Log user in
     public AuthResult login(LoginRequest loginRequest) {
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())

@@ -2,6 +2,9 @@ package gubler.know_a_guy.know_a_guy.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,18 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final AuthService authService;
     private final AuthCookieService cookieService;
+
+    // Me endpoint to persist logged in user's state
+    @GetMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ApiResponse<UserResponseDto>> getMe(@AuthenticationPrincipal UserDetails principal) {
+        String userEmail = principal.getUsername();
+        UserResponseDto currentUser = authService.getMe(userEmail);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(ApiResponse.success(currentUser));
+    }
 
     // Client account creation endpoint
     @PostMapping("/client/signup")
