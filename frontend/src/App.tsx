@@ -7,29 +7,43 @@ import LoginScreen from './screens/no-auth/LoginScreen.tsx';
 import SignupScreen from './screens/no-auth/SignupScreen.tsx';
 import { useMe } from './hooks/auth/useMe.ts';
 import { useEffect } from 'react';
-import { useAppDispatch } from './redux/hooks.ts';
-import { setUser } from "./redux/features/auth/authSlice.ts";
+import { useAppDispatch, useAppSelector } from './redux/hooks.ts';
+import { setUser, clearUser } from "./redux/features/auth/authSlice.ts";
+import ProtectedRoute from './components/Routes/ProtectedRoute.tsx';
+import HomeScreen from './screens/auth/HomeScreen.tsx';
+import LoadingScreen from './screens/LoadingScreen.tsx';
+import PublicOnlyRoute from './components/Routes/PublicOnlyRoute.tsx';
 
 function App() {
-  const {data, isPending, isError} = useMe();
+  const {data, isPending} = useMe();
   const dispatch = useAppDispatch();
+  const {isInitializing} = useAppSelector(state => state.auth);
 
   useEffect(() => {
-    if (!isPending && !isError && data != null) {
-      dispatch(setUser(data!));
-      return
-    }
-  }, [data]);
+    if (isPending) return;
+    if (data) dispatch(setUser(data));
+    else dispatch(clearUser());
+  }, [data, isPending, dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       
-      <Routes>
-        <Route index element={<LandingScreen />}/>
-        <Route path='/login' element={<LoginScreen />}/>
-        <Route path='/signup' element={<SignupScreen />}/>
-      </Routes>
+      {isInitializing ? (
+        <LoadingScreen />
+      ) : (
+        <Routes>
+          <Route element={<PublicOnlyRoute />}>
+            <Route index element={<LandingScreen />}/>
+            <Route path='/login' element={<LoginScreen />}/>
+            <Route path='/signup' element={<SignupScreen />}/>
+          </Route>
+
+          <Route element={<ProtectedRoute />}>
+            <Route path='/home' element={<HomeScreen />}/>
+          </Route>
+        </Routes>
+      )}
     </ThemeProvider>
   )
 }
