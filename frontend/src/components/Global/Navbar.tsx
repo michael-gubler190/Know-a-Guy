@@ -5,7 +5,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { Container } from '@mui/material';
 import { NavLink, useNavigate } from 'react-router';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { useLogout } from '../../hooks/auth/useLogout';
+import { clearUser } from "../../redux/features/auth/authSlice";
 
 interface NavbarProps {
   position: "fixed" | "absolute" | "sticky" | "relative" | "static" | undefined
@@ -13,6 +15,9 @@ interface NavbarProps {
 
 export default function Navbar({position} : NavbarProps) {
   const navigate = useNavigate();
+
+  const {mutate: logout} = useLogout();
+  const dispatch = useAppDispatch();
 
   const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
   const currentUser = useAppSelector(state => state.auth.user);
@@ -42,7 +47,13 @@ export default function Navbar({position} : NavbarProps) {
 
                 <Button 
                   color="inherit"
-                  onClick={() => navigate("/signup")}
+                  onClick={() => {
+                    logout(undefined, {
+                      onSuccess: () => {
+                        dispatch(clearUser());
+                      }
+                    })
+                  }}
                 >
                   Logout
                 </Button>
