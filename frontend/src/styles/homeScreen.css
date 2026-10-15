@@ -1,0 +1,152 @@
+.home {
+  --home-primary: #4a7ba6;
+  --home-primary-ring: rgba(74, 123, 166, 0.15);
+  --home-text: #10193a;
+  --home-text-muted: rgba(16, 25, 58, 0.6);
+  --home-border: rgba(16, 25, 58, 0.14);
+  --home-surface: #ffffff;
+
+  --home-pill-height: 36px;
+  --home-pill-gap: 8px;
+
+  min-height: 100vh;
+}
+
+
+.home__top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 40px 24px 0;
+  box-sizing: border-box;
+}
+
+/* ---------- Search bar ---------- */
+
+.home__search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 4px 20px;
+  box-sizing: border-box;
+  border: 1px solid var(--home-border);
+  border-radius: 999px;
+  background: var(--home-surface);
+  box-shadow: 0 2px 12px rgba(16, 25, 58, 0.06);
+  transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.home__search:hover {
+  box-shadow: 0 4px 18px rgba(16, 25, 58, 0.1);
+}
+
+.home__search:focus-within {
+  border-color: var(--home-primary);
+  box-shadow: 0 0 0 3px var(--home-primary-ring);
+}
+
+.home .home__search-icon {
+  color: var(--home-text-muted);
+}
+
+.home .home__search-input {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 1.05rem;
+  color: var(--home-text);
+}
+
+/* ---------- Filter pills ---------- */
+
+.home__filters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* Pills wrap onto new lines and fill the container width */
+.home__pills {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--home-pill-gap);
+  width: 100%;
+  padding: 4px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Collapsed: clip to a single row (pill height + vertical padding) */
+.home__pills--collapsed {
+  max-height: calc(var(--home-pill-height) + 8px);
+}
+
+/* Doubled class beats MUI Chip's own styles regardless of CSS load order */
+.home .home__pill {
+  flex-shrink: 0;
+  height: var(--home-pill-height);
+  padding: 0 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.home .home__pill--outlined {
+  background: var(--home-surface);
+  border-color: var(--home-border);
+  color: var(--home-text);
+}
+
+/* ---------- Show more / less toggle ---------- */
+
+.home .home__toggle {
+  padding: 2px 8px;
+  margin-left: -8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--home-primary);
+}
+
+.home .home__toggle .MuiButton-endIcon {
+  margin-left: 2px;
+}
+
+.home .home__toggle .MuiButton-endIcon svg {
+  transition: transform 200ms ease;
+}
+
+.home .home__toggle--expanded .MuiButton-endIcon svg {
+  transform: rotate(180deg);
+}
+
+/* ---------- Empty state ---------- */
+
+.home__empty {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.home .home__empty-text {
+  margin: 0;
+  font-weight: 500;
+  color: var(--home-text-muted);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 600px) {
+  .home__top {
+    padding: 24px 16px 0;
+  }
+}

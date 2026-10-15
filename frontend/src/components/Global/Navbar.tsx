@@ -1,85 +1,178 @@
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { Container } from '@mui/material';
-import { NavLink, useNavigate } from 'react-router';
-import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { useLogout } from '../../hooks/auth/useLogout';
+import { useState } from "react";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import {
+  Container,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { NavLink, useNavigate } from "react-router";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useLogout } from "../../hooks/auth/useLogout";
 import { clearUser } from "../../redux/features/auth/authSlice";
+import "../../styles/navbar.css";
 
 interface NavbarProps {
-  position: "fixed" | "absolute" | "sticky" | "relative" | "static" | undefined
+  position: "fixed" | "absolute" | "sticky" | "relative" | "static" | undefined;
 }
 
-export default function Navbar({position} : NavbarProps) {
+const NAV_LINKS = [
+  { label: "Find Pros", to: "/home" },
+];
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 18) return "Good afternoon";
+  return "Good evening";
+}
+
+export default function Navbar({ position }: NavbarProps) {
   const navigate = useNavigate();
 
-  const {mutate: logout} = useLogout();
+  const { mutate: logout } = useLogout();
   const dispatch = useAppDispatch();
 
-  const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
-  const currentUser = useAppSelector(state => state.auth.user);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const currentUser = useAppSelector((state) => state.auth.user);
+  const firstName = currentUser?.firstName;
+
+  // Account dropdown: the anchor element doubles as the open/closed state
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const menuOpen = Boolean(menuAnchor);
+
+  const handleMenuClose = () => setMenuAnchor(null);
+
+  const handleLogout = () => {
+    handleMenuClose();
+    logout(undefined, {
+      onSuccess: () => {
+        dispatch(clearUser());
+      },
+    });
+  };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar color='primary' position={position}>
-        <Container maxWidth="xl">
-          <Toolbar>
-            <Typography 
-              variant="h6" 
-              component={NavLink} 
-              to={"/"}
-              sx={{ 
-                textDecoration: 'none', 
-                color: 'inherit' 
-              }}
-            >
+    <AppBar className="navbar" color="primary" position={position} elevation={0}>
+      <Container maxWidth="xl">
+        <Toolbar className="navbar__toolbar" disableGutters>
+          {/* Left: brand + links */}
+          <div className="navbar__start">
+            <NavLink className="navbar__brand" to={isAuthenticated ? "/home" : "/"}>
               Know-a-Guy
-            </Typography>
+            </NavLink>
 
+            {isAuthenticated && (
+              <>
+                <span className="navbar__divider" aria-hidden="true" />
+                <nav className="navbar__links" aria-label="Main">
+                  {NAV_LINKS.map(({ label, to }) => (
+                    <NavLink key={to} className="navbar__link" to={to}>
+                      {label}
+                    </NavLink>
+                  ))}
+                </nav>
+              </>
+            )}
+          </div>
+
+          {/* Center: welcome message */}
+          <div className="navbar__center">
+            {isAuthenticated && (
+              <>
+                <span className="navbar__greeting">
+                  {getGreeting()}
+                  {firstName && (
+                    <>
+                      , <span className="navbar__name">{firstName}</span>
+                    </>
+                  )}
+                </span>
+                <span className="navbar__subtext">
+                  What do you need help with today?
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Right: actions */}
+          <div className="navbar__end">
             {isAuthenticated ? (
-              <Box sx={{ ml: 'auto' }}>
-                <Typography>
-                  Hello, {currentUser?.firstName}
-                </Typography>
-
-                <Button 
-                  color="inherit"
-                  onClick={() => {
-                    logout(undefined, {
-                      onSuccess: () => {
-                        dispatch(clearUser());
-                      }
-                    })
-                  }}
+              <>
+                <IconButton
+                  className={`navbar__avatar-btn${menuOpen ? " navbar__avatar-btn--open" : ""}`}
+                  aria-label="Account menu"
+                  aria-haspopup="menu"
+                  aria-controls={menuOpen ? "account-menu" : undefined}
+                  aria-expanded={menuOpen}
+                  onClick={(event) => setMenuAnchor(event.currentTarget)}
                 >
-                  Logout
-                </Button>
-              </Box>
+                  <PersonIcon />
+                </IconButton>
+
+                <Menu
+                  id="account-menu"
+                  anchorEl={menuAnchor}
+                  open={menuOpen}
+                  onClose={handleMenuClose}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  classes={{ paper: "navbar__menu" }}
+                >
+                  {/* Profile route doesn't exist yet; update the path when you add it */}
+                  <MenuItem
+                    className="navbar__menu-item"
+                    component={NavLink}
+                    to="/profile"
+                    onClick={handleMenuClose}
+                  >
+                    <ListItemIcon>
+                      <PersonIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Profile</ListItemText>
+                  </MenuItem>
+
+                  <Divider className="navbar__menu-divider" />
+
+                  <MenuItem
+                    className="navbar__menu-item navbar__menu-item--danger"
+                    onClick={handleLogout}
+                  >
+                    <ListItemIcon>
+                      <LogoutIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Logout</ListItemText>
+                  </MenuItem>
+                </Menu>
+              </>
             ) : (
-              <Box sx={{ ml: 'auto' }}>
-                <Button 
+              <>
+                <Button
+                  className="navbar__btn"
                   color="inherit"
                   onClick={() => navigate("/login")}
                 >
                   Login
                 </Button>
 
-                <Button 
-                  color="inherit"
+                <Button
+                  className="navbar__btn navbar__btn--solid"
                   onClick={() => navigate("/signup")}
                 >
                   Signup
                 </Button>
-              </Box>
+              </>
             )}
-
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </Box>
+          </div>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }
-

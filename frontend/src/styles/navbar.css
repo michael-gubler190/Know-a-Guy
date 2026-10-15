@@ -1,0 +1,231 @@
+/*
+  --navbar-primary mirrors themes/theme.ts. If you change the theme's primary
+  color, update it here too.
+*/
+.navbar {
+  --navbar-primary: #4a7ba6;
+  --navbar-fg: #ffffff;
+  --navbar-fg-muted: rgba(255, 255, 255, 0.78);
+  --navbar-hover: rgba(255, 255, 255, 0.12);
+  --navbar-active: rgba(255, 255, 255, 0.2);
+  --navbar-divider: rgba(255, 255, 255, 0.3);
+}
+
+/* Three zones: brand + links | welcome | actions.
+   The 1fr / auto / 1fr columns keep the welcome message in the exact
+   center of the bar no matter how wide the left and right zones are. */
+.navbar .navbar__toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  min-height: 68px;
+}
+
+/* ---------- Left: brand + links ---------- */
+
+.navbar__start {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.navbar__brand {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--navbar-fg);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navbar__divider {
+  width: 1px;
+  height: 24px;
+  background: var(--navbar-divider);
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navbar__link {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--navbar-fg-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.navbar__link:hover {
+  background: var(--navbar-hover);
+  color: var(--navbar-fg);
+}
+
+/* NavLink adds the "active" class to the link matching the current route */
+.navbar__link.active {
+  background: var(--navbar-active);
+  color: var(--navbar-fg);
+}
+
+/* ---------- Center: welcome message ---------- */
+
+.navbar__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  line-height: 1.25;
+}
+
+.navbar__greeting {
+  font-size: 1.05rem;
+  color: var(--navbar-fg-muted);
+  white-space: nowrap;
+}
+
+.navbar__name {
+  font-weight: 800;
+  color: var(--navbar-fg);
+}
+
+.navbar__subtext {
+  font-size: 0.8rem;
+  color: var(--navbar-fg-muted);
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+/* ---------- Right: actions ---------- */
+
+.navbar__end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Doubled class beats MUI Button's own styles regardless of CSS load order */
+.navbar .navbar__btn {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--navbar-fg);
+}
+
+.navbar .navbar__btn--outlined {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.navbar .navbar__btn--outlined:hover {
+  border-color: var(--navbar-fg);
+  background: var(--navbar-hover);
+}
+
+.navbar .navbar__btn--solid {
+  background: var(--navbar-fg);
+  color: var(--navbar-primary);
+}
+
+.navbar .navbar__btn--solid:hover {
+  background: rgba(255, 255, 255, 0.88);
+}
+
+/* ---------- Responsive ---------- */
+
+/* Tablet: drop the links (move them into a menu later) */
+@media (max-width: 900px) {
+  .navbar__divider,
+  .navbar__links {
+    display: none;
+  }
+}
+
+/* Phone: drop the welcome message, keep brand and actions */
+@media (max-width: 640px) {
+  .navbar .navbar__toolbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .navbar__center {
+    display: none;
+  }
+}
+
+/* ===== Add to the bottom of styles/navbar.css ===== */
+
+/* ---------- Account icon button (right zone) ---------- */
+
+.navbar .navbar__avatar-btn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: var(--navbar-fg);
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.navbar .navbar__avatar-btn:hover,
+.navbar .navbar__avatar-btn--open {
+  border-color: var(--navbar-fg);
+  background: var(--navbar-hover);
+}
+
+/* ---------- Account dropdown ---------- */
+
+/* MUI renders the menu in a portal outside .navbar, so the --navbar-*
+   variables don't reach it. It gets its own. The doubled class beats
+   MUI's own Popover/Paper styles regardless of CSS load order. */
+.navbar__menu.MuiPopover-paper {
+  --menu-primary: #4a7ba6;
+  --menu-text: #10193a;
+  --menu-danger: #b3261e;
+
+  min-width: 200px;
+  margin-top: 8px;
+  padding: 6px;
+  border: 1px solid rgba(16, 25, 58, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(16, 25, 58, 0.16);
+}
+
+.navbar__menu .navbar__menu-item {
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--menu-text);
+  text-decoration: none; /* the Profile item renders as a link */
+}
+
+.navbar__menu .navbar__menu-item .MuiListItemIcon-root {
+  min-width: 32px;
+  color: inherit;
+}
+
+.navbar__menu .navbar__menu-item:hover {
+  background: rgba(74, 123, 166, 0.1);
+}
+
+/* NavLink adds "active" when the Profile page is the current route */
+.navbar__menu .navbar__menu-item.active {
+  background: rgba(74, 123, 166, 0.14);
+  color: var(--menu-primary);
+}
+
+.navbar__menu .navbar__menu-item--danger {
+  color: var(--menu-danger);
+}
+
+.navbar__menu .navbar__menu-item--danger:hover {
+  background: rgba(179, 38, 30, 0.08);
+}
+
+.navbar__menu .navbar__menu-divider {
+  margin: 6px 4px;
+}
