@@ -44,7 +44,6 @@ export default function Navbar({ position }: NavbarProps) {
   const currentUser = useAppSelector((state) => state.auth.user);
   const firstName = currentUser?.firstName;
 
-  // Account dropdown: the anchor element doubles as the open/closed state
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
   const menuOpen = Boolean(menuAnchor);
 
@@ -126,7 +125,7 @@ export default function Navbar({ position }: NavbarProps) {
                   transformOrigin={{ vertical: "top", horizontal: "right" }}
                   classes={{ paper: "navbar__menu" }}
                 >
-                  {/* Profile route doesn't exist yet; update the path when you add it */}
+
                   <MenuItem
                     className="navbar__menu-item"
                     component={NavLink}
