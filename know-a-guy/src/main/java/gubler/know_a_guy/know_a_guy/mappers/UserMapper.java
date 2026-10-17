@@ -14,12 +14,14 @@ public class UserMapper {
             user.getFirstName(),
             user.getLastName(),
             user.getProfilePicturePath(),
+            user.getBio(),
             user.getEmail(),
             user.getUsername(),
             user.getRole(),
             user.getStatus(),
             user.getZip(),
-            user.getCity()
+            user.getCity(),
+            user.getCreatedAt()
         );
     }
 

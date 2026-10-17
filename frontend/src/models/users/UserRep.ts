@@ -3,10 +3,12 @@ export interface UserRep {
     firstName: string
     lastName: string
     profilePicturePath: string
+    bio: string
     email: string
     username: string
     role: string
     status: string
     zip: string
     city: string
+    createdAt: string
 }

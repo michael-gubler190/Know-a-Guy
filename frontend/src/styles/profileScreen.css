@@ -1,0 +1,355 @@
+/*
+  These values mirror themes/theme.ts. If you change the theme colors,
+  update them here too.
+*/
+.profile {
+  --pf-primary: #4a7ba6;
+  --pf-primary-dark: #3d6788;
+  --pf-primary-soft: rgba(74, 123, 166, 0.1);
+  --pf-secondary: #f9e1e0;
+  --pf-text: #10193a;
+  --pf-muted: rgba(16, 25, 58, 0.62);
+  --pf-border: rgba(16, 25, 58, 0.1);
+  --pf-surface: #ffffff;
+  --pf-bg: #f6f8fb;
+
+  --pf-avatar-size: 128px;
+
+  min-height: 100vh;
+  background: var(--pf-bg);
+}
+
+.profile__main {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Shared card surface */
+.profile__card {
+  background: var(--pf-surface);
+  border: 1px solid var(--pf-border);
+  border-radius: 16px;
+  box-shadow: 0 2px 14px rgba(16, 25, 58, 0.05);
+}
+
+/* Cards fade up in sequence */
+.profile__main > *,
+.profile__grid > * {
+  opacity: 0;
+  animation: pf-rise 500ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+.profile__hero { animation-delay: 0ms; }
+.profile__content { animation-delay: 100ms; }
+.profile__side { animation-delay: 180ms; }
+
+/* ---------- Hero ---------- */
+
+.profile__hero {
+  overflow: hidden;
+}
+
+.profile__banner {
+  height: 150px;
+  background:
+    radial-gradient(circle at 88% 15%, rgba(249, 225, 224, 0.6), transparent 42%),
+    linear-gradient(120deg, var(--pf-primary-dark), var(--pf-primary) 55%, #7fa6c7);
+}
+
+.profile__hero-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px 24px;
+  padding: 0 32px 28px;
+}
+
+/* Doubled class beats MUI Avatar's own styles regardless of CSS load order */
+.profile .profile__avatar {
+  flex-shrink: 0;
+  width: var(--pf-avatar-size);
+  height: var(--pf-avatar-size);
+  margin-top: calc(var(--pf-avatar-size) / -2); /* overlap the banner */
+  border: 5px solid var(--pf-surface);
+  box-shadow: 0 6px 20px rgba(16, 25, 58, 0.18);
+  font-size: 2.5rem;
+  background: var(--pf-primary);
+}
+
+.profile__identity {
+  flex: 1;
+  min-width: 240px;
+  padding-top: 16px;
+}
+
+.profile__name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.profile__name {
+  margin: 0;
+  font-size: clamp(1.6rem, 3.6vw, 2.1rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--pf-text);
+}
+
+.profile .profile__chip {
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.profile__username {
+  margin: 4px 0 0;
+  font-size: 1rem;
+  color: var(--pf-muted);
+}
+
+.profile__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.profile__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.92rem;
+  color: var(--pf-muted);
+}
+
+.profile .profile__meta-icon {
+  font-size: 1.1rem;
+  color: var(--pf-primary);
+}
+
+.profile__hero-actions {
+  padding-top: 16px;
+}
+
+.profile .profile__edit {
+  padding: 8px 22px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* ---------- Two-column body ---------- */
+
+.profile__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ---------- Main column ---------- */
+
+.profile__tabs-header {
+  padding: 0 16px;
+  border-bottom: 1px solid var(--pf-border);
+}
+
+.profile .profile__tab {
+  min-height: 56px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.profile__section {
+  padding: 28px 32px 32px;
+}
+
+.profile__section-title {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--pf-text);
+}
+
+.profile__bio {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--pf-muted);
+}
+
+/* ---------- Sidebar ---------- */
+
+.profile__side {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.profile__side-title {
+  margin: 0 0 14px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pf-muted);
+}
+
+.profile__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.profile__contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.profile__contact-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--pf-primary-soft);
+  color: var(--pf-primary);
+}
+
+.profile__contact-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile__label {
+  font-size: 0.78rem;
+  color: var(--pf-muted);
+}
+
+.profile__value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--pf-text);
+  overflow-wrap: anywhere;
+}
+
+/* Key / value rows */
+.profile__facts {
+  margin: 0;
+}
+
+.profile__fact {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--pf-border);
+}
+
+.profile__fact:first-child {
+  padding-top: 0;
+}
+
+.profile__fact:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.profile__fact dt {
+  font-size: 0.9rem;
+  color: var(--pf-muted);
+}
+
+.profile__fact dd {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-align: right;
+  color: var(--pf-text);
+}
+
+.profile__capitalize {
+  text-transform: capitalize;
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes pf-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .profile__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .profile {
+    --pf-avatar-size: 104px;
+  }
+
+  .profile__main {
+    padding: 20px 16px 48px;
+  }
+
+  .profile__banner {
+    height: 120px;
+  }
+
+  .profile__hero-body {
+    padding: 0 20px 24px;
+  }
+
+  .profile__identity {
+    flex-basis: 100%;
+    padding-top: 0;
+  }
+
+  .profile__hero-actions {
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .profile .profile__edit {
+    width: 100%;
+  }
+
+  .profile__section {
+    padding: 22px 20px 26px;
+  }
+}
+
+/* ---------- Reduced motion: no entrance animation ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .profile__main > *,
+  .profile__grid > * {
+    opacity: 1;
+    animation: none;
+  }
+}
