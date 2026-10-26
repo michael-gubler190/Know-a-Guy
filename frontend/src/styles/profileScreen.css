@@ -139,6 +139,8 @@
 
 .profile__hero-actions {
   padding-top: 16px;
+  display: flex;
+  gap: 10px;
 }
 
 .profile .profile__edit {

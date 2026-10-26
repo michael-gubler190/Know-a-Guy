@@ -1,15 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, Button, Chip, Tab, Tabs } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EditIcon from "@mui/icons-material/Edit";
+import Handyman from "@mui/icons-material/Handyman"
 import Navbar from "../../components/Global/Navbar";
 import "../../styles/profileScreen.css";
 import { useAppSelector } from "../../redux/hooks";
+import CustomModal from "../../components/Global/CustomModal";
+import BecomeProForm from "../../components/Profile/BecomeProForm";
 
 
 function ProfileScreen(): React.JSX.Element {
   const { user } = useAppSelector((state) => state.auth);
+
+  const [becomeProModal, setBecomeProModal] = useState<boolean>(false);
 
   const fullName = `${user?.firstName} ${user?.lastName ?? ""}`.trim();
   const location = [user?.city, user?.zip].filter(Boolean).join(", ") || "Not provided";
@@ -55,6 +60,15 @@ function ProfileScreen(): React.JSX.Element {
             </div>
 
             <div className="profile__hero-actions">
+              <Button
+                className="profile__edit"
+                variant="contained"
+                startIcon={<Handyman />}
+                onClick={() => setBecomeProModal(true)}
+              >
+                Register as Pro
+              </Button>
+
               <Button
                 className="profile__edit"
                 variant="contained"
@@ -140,6 +154,13 @@ function ProfileScreen(): React.JSX.Element {
           </aside>
         </div>
       </main>
+
+      <CustomModal
+        open={becomeProModal}
+        onClose={() => setBecomeProModal(false)}
+        children={<BecomeProForm />}
+        label="modal-become-pro-form"
+      />
     </div>
   );
 }
