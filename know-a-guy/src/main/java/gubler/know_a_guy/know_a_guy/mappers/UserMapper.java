@@ -1,8 +1,11 @@
 package gubler.know_a_guy.know_a_guy.mappers;
 
+import java.util.function.Consumer;
+
 import org.springframework.stereotype.Component;
 
 import gubler.know_a_guy.know_a_guy.DTOs.auth.ClientSignupRequest;
+import gubler.know_a_guy.know_a_guy.DTOs.user.UpdateUserRequest;
 import gubler.know_a_guy.know_a_guy.DTOs.user.UserResponseDto;
 import gubler.know_a_guy.know_a_guy.entities.UserEntity;
 
@@ -35,4 +38,20 @@ public class UserMapper {
 
         return user;
     }
+
+    public void updateEntity(UpdateUserRequest request, UserEntity user) {
+        setIfPresent(request.getBio(), user::setBio);
+        setIfPresent(request.getProfilePicturePath(), user::setProfilePicturePath);
+        setIfPresent(request.getUsername(), user::setUsername);
+        setIfPresent(request.getEmail(), user::setEmail);
+        setIfPresent(request.getZip(), user::setZip);
+        setIfPresent(request.getCity(), user::setCity);
+    }
+
+    private void setIfPresent(String value, Consumer<String> setter) {
+        if (value != null && !value.isBlank()) {
+            setter.accept(value.trim());
+        }
+    }
+    
 }
