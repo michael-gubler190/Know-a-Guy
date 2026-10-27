@@ -190,6 +190,7 @@
   font-size: 1.02rem;
   line-height: 1.7;
   color: var(--pf-muted);
+  white-space: pre-wrap;
 }
 
 /* ---------- Sidebar ---------- */

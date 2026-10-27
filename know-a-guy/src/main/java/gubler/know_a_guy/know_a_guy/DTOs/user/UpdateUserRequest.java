@@ -1,8 +1,8 @@
 package gubler.know_a_guy.know_a_guy.DTOs.user;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value 
+@Data
 public class UpdateUserRequest {
     private String username;
     private String email;

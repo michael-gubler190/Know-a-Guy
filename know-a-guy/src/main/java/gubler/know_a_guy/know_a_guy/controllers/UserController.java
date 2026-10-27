@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +24,7 @@ public class UserController {
 
     // Update user profile
     @PatchMapping
-    public ResponseEntity<ApiResponse<UserResponseDto>> updateUser(@AuthenticationPrincipal UserDetails currentUser, @Valid UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<ApiResponse<UserResponseDto>> updateUser(@AuthenticationPrincipal UserDetails currentUser, @RequestBody @Valid UpdateUserRequest updateUserRequest) {
         String currentUserEmail = currentUser.getUsername();
         UserResponseDto response = userService.updateUser(currentUserEmail, updateUserRequest);
 

@@ -9,12 +9,14 @@ import "../../styles/profileScreen.css";
 import { useAppSelector } from "../../redux/hooks";
 import CustomModal from "../../components/Global/CustomModal";
 import BecomeProForm from "../../components/Profile/BecomeProForm";
+import EditProfileForm from "../../components/Profile/EditProfileForm";
 
 
 function ProfileScreen(): React.JSX.Element {
   const { user } = useAppSelector((state) => state.auth);
 
   const [becomeProModal, setBecomeProModal] = useState<boolean>(false);
+  const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
 
   const fullName = `${user?.firstName} ${user?.lastName ?? ""}`.trim();
   const location = [user?.city, user?.zip].filter(Boolean).join(", ") || "Not provided";
@@ -73,6 +75,7 @@ function ProfileScreen(): React.JSX.Element {
                 className="profile__edit"
                 variant="contained"
                 startIcon={<EditIcon />}
+                onClick={() => setEditProfileModal(true)}
               >
                 Edit profile
               </Button>
@@ -160,6 +163,13 @@ function ProfileScreen(): React.JSX.Element {
         onClose={() => setBecomeProModal(false)}
         children={<BecomeProForm />}
         label="modal-become-pro-form"
+      />
+
+      <CustomModal
+        open={editProfileModal}
+        onClose={() => setEditProfileModal(false)}
+        children={<EditProfileForm setModal={setEditProfileModal}/>}
+        label="modal-edit-profile-form"
       />
     </div>
   );
