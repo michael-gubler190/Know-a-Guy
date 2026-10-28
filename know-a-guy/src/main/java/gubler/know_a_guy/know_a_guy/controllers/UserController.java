@@ -32,4 +32,16 @@ public class UserController {
             .status(HttpStatus.OK)
             .body(ApiResponse.success("Successfully updated user", response));
     }
+
+
+    // Update user's role to professional
+    @PatchMapping("/role/2")
+    public ResponseEntity<ApiResponse<UserResponseDto>> becomeProfessional(@AuthenticationPrincipal UserDetails currentUser) {
+        String currentUserEmail = currentUser.getUsername();
+        UserResponseDto response = userService.becomeProfessional(currentUserEmail);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(ApiResponse.success("Successfully updated user role", response));
+    }
 }
