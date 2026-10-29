@@ -62,14 +62,16 @@ function ProfileScreen(): React.JSX.Element {
             </div>
 
             <div className="profile__hero-actions">
-              <Button
-                className="profile__edit"
-                variant="contained"
-                startIcon={<Handyman />}
-                onClick={() => setBecomeProModal(true)}
-              >
-                Register as Pro
-              </Button>
+              {user?.role == "client" && (
+                <Button
+                  className="profile__edit"
+                  variant="contained"
+                  startIcon={<Handyman />}
+                  onClick={() => setBecomeProModal(true)}
+                >
+                  Register as Pro
+                </Button>
+              )}
 
               <Button
                 className="profile__edit"
@@ -161,7 +163,7 @@ function ProfileScreen(): React.JSX.Element {
       <CustomModal
         open={becomeProModal}
         onClose={() => setBecomeProModal(false)}
-        children={<BecomeProForm />}
+        children={<BecomeProForm setModal={setBecomeProModal}/>}
         label="modal-become-pro-form"
       />
 
