@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: mg1019984/know-a-guy-frontend:v2
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-logs
+              mountPath: /var/log/nginx
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+
+
+        - name: access-logger
+          image: busybox:1.36
+          command: ["sh", "-c", "tail -n+1 -F /var/log/nginx/access.log"]
+          volumeMounts:
+            - name: nginx-logs
+              mountPath: /var/log/nginx
+              readOnly: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 32Mi
+
+      volumes:
+        - name: nginx-logs
+          emptyDir: {}
