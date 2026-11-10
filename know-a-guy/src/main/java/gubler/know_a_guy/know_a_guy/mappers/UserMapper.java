@@ -5,12 +5,26 @@ import java.util.function.Consumer;
 import org.springframework.stereotype.Component;
 
 import gubler.know_a_guy.know_a_guy.DTOs.auth.ClientSignupRequest;
+import gubler.know_a_guy.know_a_guy.DTOs.user.ProfessionalResponseDto;
 import gubler.know_a_guy.know_a_guy.DTOs.user.UpdateUserRequest;
 import gubler.know_a_guy.know_a_guy.DTOs.user.UserResponseDto;
 import gubler.know_a_guy.know_a_guy.entities.UserEntity;
 
 @Component
 public class UserMapper {
+    public ProfessionalResponseDto toProfessionalResponse(UserEntity user) {
+        return new ProfessionalResponseDto(
+            user.getUserId(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getProfilePicturePath(),
+            user.getBio(),
+            user.getUsername(),
+            user.getZip(),
+            user.getCity()
+        );
+    }
+
     public UserResponseDto toResponse(UserEntity user) {
         return new UserResponseDto(
             user.getUserId(),

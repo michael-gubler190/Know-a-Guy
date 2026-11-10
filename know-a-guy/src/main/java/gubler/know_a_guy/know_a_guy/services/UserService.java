@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import gubler.know_a_guy.know_a_guy.DTOs.user.ProfessionalResponseDto;
 import gubler.know_a_guy.know_a_guy.DTOs.user.UpdateUserRequest;
 import gubler.know_a_guy.know_a_guy.DTOs.user.UserResponseDto;
 import gubler.know_a_guy.know_a_guy.entities.UserEntity;
@@ -22,6 +23,22 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
+
+    // Load in all professionals
+    @Transactional(readOnly = true)
+    public List<ProfessionalResponseDto> getProfessionals() {
+        List<UserEntity> professionals = userRepository
+            .findByRole(UserRole.professional)
+            .orElseThrow(() -> new ResourceNotFoundException("Could not find any professionals"));
+        
+        List<ProfessionalResponseDto> professionalsResponse = professionals
+            .stream()
+            .map(pro -> userMapper.toProfessionalResponse(pro))
+            .toList();
+        
+        return professionalsResponse;
+    }
 
 
     // Update user profile

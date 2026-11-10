@@ -1,15 +1,19 @@
 package gubler.know_a_guy.know_a_guy.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import gubler.know_a_guy.know_a_guy.DTOs.api.ApiResponse;
+import gubler.know_a_guy.know_a_guy.DTOs.user.ProfessionalResponseDto;
 import gubler.know_a_guy.know_a_guy.DTOs.user.UpdateUserRequest;
 import gubler.know_a_guy.know_a_guy.DTOs.user.UserResponseDto;
 import gubler.know_a_guy.know_a_guy.services.UserService;
@@ -21,6 +25,18 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
+
+    // Get all professionals
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ProfessionalResponseDto>>> getAllProfessionals() {
+        List<ProfessionalResponseDto> allProfessionals = userService.getProfessionals();
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(ApiResponse.success(allProfessionals));
+    }
+
 
     // Update user profile
     @PatchMapping
