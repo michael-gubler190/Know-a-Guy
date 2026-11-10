@@ -1,7 +1,11 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { Button, Chip, InputBase, SvgIcon, Typography } from "@mui/material";
+import { Box, Button, Chip, Container, InputBase, SvgIcon, Typography } from "@mui/material";
 import Navbar from "../../components/Global/Navbar";
 import "../../styles/homeScreen.css";
+import "../../styles/loadingScreen.css";
+import { useProfessionals } from "../../hooks/user/useProfessionals";
+import LoadingScreen from "../LoadingScreen";
+import ProfessionalCard from "../../components/Global/ProfessionalCard";
 
 const FILTERS = [
   "All",
@@ -26,6 +30,8 @@ function HomeScreen() {
   const [expanded, setExpanded] = useState(false);
   const [hasOverflow, setHasOverflow] = useState(false);
   const pillsRef = useRef<HTMLDivElement>(null);
+
+  const {data: professionals, isPending, isLoading, isError, error} = useProfessionals();
 
 
   useLayoutEffect(() => {
@@ -102,11 +108,53 @@ function HomeScreen() {
         </div>
       </section>
 
-      <div className="home__empty">
-        <Typography variant="h5" component="p" className="home__empty-text">
-          No results found
-        </Typography>
-      </div>
+      {isPending && <LoadingScreen fullScreen={false}/>}
+      {isLoading && <LoadingScreen fullScreen={false}/>}
+      {isError && (
+        <div className="home__empty">
+          <Typography variant="h5" component="p" className="home__empty-text">
+            {error.message}
+          </Typography>
+        </div>
+      )}
+
+      {professionals?.length == 0 ? (
+        <div className="home__empty">
+          <Typography variant="h5" component="p" className="home__empty-text">
+            No results found
+          </Typography>
+        </div>
+      ) : (
+        <Container maxWidth="xl" sx={{ py: 3 }}>
+          <Box
+            sx={{
+              display: "grid",
+              gap: 3,
+              gridTemplateColumns: {
+                xs: "repeat(1, minmax(0, 1fr))",
+                sm: "repeat(2, minmax(0, 1fr))",
+                md: "repeat(3, minmax(0, 1fr))",
+                lg: "repeat(4, minmax(0, 1fr))",
+              },
+          }}
+        >
+            {professionals?.map((pro) => (
+              <ProfessionalCard
+                key={pro["proId"]}
+
+                proId={pro["proId"]}
+                firstName={pro["firstName"]}
+                lastName={pro["lastName"]}
+                profilePicturePath={pro["profilePicturePath"]}
+                bio={pro["bio"]}
+                username={pro["username"]}
+                city={pro["city"]}
+                zip={pro["zip"]}
+              />
+            ))}
+          </Box>
+        </Container>
+      )}
     </div>
   );
 }

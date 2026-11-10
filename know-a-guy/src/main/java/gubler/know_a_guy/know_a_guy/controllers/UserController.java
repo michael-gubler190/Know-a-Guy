@@ -28,7 +28,7 @@ public class UserController {
 
 
     // Get all professionals
-    @GetMapping
+    @GetMapping("/professionals")
     public ResponseEntity<ApiResponse<List<ProfessionalResponseDto>>> getAllProfessionals() {
         List<ProfessionalResponseDto> allProfessionals = userService.getProfessionals();
 
