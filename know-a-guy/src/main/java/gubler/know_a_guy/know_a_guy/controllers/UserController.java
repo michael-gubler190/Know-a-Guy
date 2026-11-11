@@ -1,6 +1,7 @@
 package gubler.know_a_guy.know_a_guy.controllers;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +27,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
+
+    // Get single professional
+    @GetMapping("/professionals/{id}")
+    public ResponseEntity<ApiResponse<ProfessionalResponseDto>> getProfessional(@PathVariable UUID proId) {
+        ProfessionalResponseDto professional = userService.getProfessionalById(proId);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(ApiResponse.success(professional));
+    }
 
 
     // Get all professionals

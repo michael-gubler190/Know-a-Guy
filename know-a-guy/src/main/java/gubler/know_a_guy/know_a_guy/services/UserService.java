@@ -2,6 +2,7 @@ package gubler.know_a_guy.know_a_guy.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,19 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+
+
+    // Get professional by id
+    @Transactional(readOnly = true)
+    public ProfessionalResponseDto getProfessionalById(UUID proId) {
+        UserEntity user = userRepository
+            .findByRoleAndUserId(UserRole.professional, proId)
+            .orElseThrow(() -> new ResourceNotFoundException("Could not find professional with that id"));
+        
+        ProfessionalResponseDto professional = userMapper.toProfessionalResponse(user);
+
+        return professional;
+    }
 
 
     // Load in all professionals
