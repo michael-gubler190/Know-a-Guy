@@ -3,6 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import {
+  Avatar,
   Container,
   Divider,
   IconButton,
@@ -113,7 +114,15 @@ export default function Navbar({ position }: NavbarProps) {
                   aria-expanded={menuOpen}
                   onClick={(event) => setMenuAnchor(event.currentTarget)}
                 >
-                  <PersonIcon />
+                  {currentUser?.profilePicturePath ? (
+                    <Avatar
+                      src={currentUser.profilePicturePath}
+                      alt={currentUser.firstName}
+                      sx={{ width: 32, height: 32 }}
+                    />
+                  ) : (
+                    <PersonIcon />
+                  )}
                 </IconButton>
 
                 <Menu
