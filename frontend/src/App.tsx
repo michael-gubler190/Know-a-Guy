@@ -15,6 +15,7 @@ import LoadingScreen from './screens/LoadingScreen.tsx';
 import PublicOnlyRoute from './components/Routes/PublicOnlyRoute.tsx';
 import NotFoundScreen from './screens/NotFoundScreen.tsx';
 import ProfileScreen from './screens/auth/ProfileScreen.tsx';
+import ProfessionalDetailScreen from './screens/auth/ProfessionalDetailScreen.tsx';
 
 function App() {
   const {data, isPending} = useMe();
@@ -44,6 +45,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path='/home' element={<HomeScreen />}/>
             <Route path='/profile' element={<ProfileScreen />}/>
+            <Route path='/professional/:professionalId' element={<ProfessionalDetailScreen />}/>
           </Route>
 
           <Route path='*' element={<NotFoundScreen />}/>

@@ -30,7 +30,7 @@ public class UserController {
 
 
     // Get single professional
-    @GetMapping("/professionals/{id}")
+    @GetMapping("/professionals/{proId}")
     public ResponseEntity<ApiResponse<ProfessionalResponseDto>> getProfessional(@PathVariable UUID proId) {
         ProfessionalResponseDto professional = userService.getProfessionalById(proId);
 

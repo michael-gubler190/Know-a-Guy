@@ -57,9 +57,6 @@
 
 .profile__banner {
   height: 150px;
-  background:
-    radial-gradient(circle at 88% 15%, rgba(249, 225, 224, 0.6), transparent 42%),
-    linear-gradient(120deg, var(--pf-primary-dark), var(--pf-primary) 55%, #7fa6c7);
 }
 
 .profile__hero-body {
